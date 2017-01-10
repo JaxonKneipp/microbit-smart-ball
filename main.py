@@ -8,17 +8,17 @@ import radio
 radio.on()
 radio.config(channel = 85)
 
-
 watchingForCatch = False
 
 while True:
     
     display.show(Image.HEART)
     vals = accelerometer.get_values()
-    data = str(math.sqrt(vals[0]**2+vals[1]**2+vals[2]**2))
+    data = math.sqrt(vals[0]**2+vals[1]**2+vals[2]**2)
     
-    if data <= 500 and not waitingForCatch:
+    if data <= 500 and not watchingForCatch:
         
+        radio.send("0")
         watchingForCatch = True
         
     if watchingForCatch and data >= 1500:
