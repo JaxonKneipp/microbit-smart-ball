@@ -6,7 +6,14 @@ from microbit import *
 
 radio.on()
 radio.config(channel=85)
+
+counter = 0
+
 while True:
+    
     msg = radio.receive()
-    if msg:
-        print(msg)
+    
+    if str(msg) == "1":
+        
+        counter += 1
+        display.show(counter)
