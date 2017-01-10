@@ -18,3 +18,4 @@ while True:
         
         counter += 1
         display.show(str(counter))
+        
