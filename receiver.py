@@ -3,6 +3,7 @@
 # Created 10/01/17
 
 from microbit import *
+import radio 
 
 radio.on()
 radio.config(channel=85)
@@ -16,4 +17,4 @@ while True:
     if str(msg) == "1":
         
         counter += 1
-        display.show(counter)
+        display.show(str(counter))
