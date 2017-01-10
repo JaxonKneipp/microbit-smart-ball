@@ -11,6 +11,7 @@ radio.config(channel = 85)
 
 watchingForCatch = False
 throw_deadline = False
+acc_history = []
 
 
 while True:
@@ -19,14 +20,24 @@ while True:
     display.show(Image.HEART)
     vals = accelerometer.get_values()
     data = math.sqrt(vals[0]**2+vals[1]**2+vals[2]**2)
+    acc_history.append(data)
+    diff = vals[-1] - vals[-2]
     
-    if data <= 500 and not watchingForCatch: #thrown
+    if len(acc_history) > 15:
+        acc_history.pop(0)
+    
+    
+    
+    print(acc_history)
+    average = sum(acc_history)/ len(acc_history)
+        
+    if average <= 700 and not watchingForCatch: #thrown
         
         radio.send("0")
         watchingForCatch = True
         throw_deadline = False
         
-    if watchingForCatch and data >= 1500: #caught
+    if watchingForCatch and average >= 3500: #caught
         
         catchtime_start = running_time()
         throw_deadline = True
@@ -38,4 +49,5 @@ while True:
         display.show(Image.SKULL)
         break
      
-    sleep(100)
+     
+    sleep(50)
