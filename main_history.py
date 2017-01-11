@@ -10,16 +10,16 @@ import music
 radio.on()
 radio.config(channel = 85)
 
-watchingForCatch = False
-throw_deadline = False
-acc_history = [1000]
-differences = [0]
-catchtime_start = 0
-
 while True:
+    watchingForCatch = False
+    throw_deadline = False
+    acc_history = [1000]
+    differences = [0]
+    catchtime_start = 0
     
     msg = radio.receive()
-    if str(msg) == "start":
+    display.show(Image.HAPPY)
+    if msg == 'start':
         while True:
             display.show(Image.HEART)
             vals = accelerometer.get_values()

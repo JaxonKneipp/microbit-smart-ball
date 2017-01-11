@@ -4,6 +4,7 @@
 
 from microbit import *
 import radio
+import music
 
 radio.on()
 radio.config(channel=85)
@@ -21,6 +22,11 @@ while True:
     if str(msg) == "game over":
         print("over")
         display.show(Image.SKULL)
+        music.play(music.WAWAWAWAA)
+        display.show('Z')
         
     if button_a.was_pressed():
-        radio.send("start")
+        radio.send("start" )
+        counter = 1
+        display.clear()
+        music.play(music.BA_DING)
