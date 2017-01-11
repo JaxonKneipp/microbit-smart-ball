@@ -17,5 +17,12 @@ while True:
     if str(msg) == "1":
         
         counter += 1
-        display.show(str(counter))
+        print("count {}".format(counter))
+        
+    if str(msg) == "game over":
+        
+        print("over")
+     
+        
+    
         
