@@ -36,7 +36,7 @@ while True:
     print(acc_history)
         
     if not watchingForCatch: #thrown
-        if (max(differences) > 1000) and (min(differences) < -1000):
+        if (max(differences) > 800) and (min(differences) < -800):
             differences = [0]
             radio.send("0")
             catchtime_start = running_time()
@@ -44,7 +44,7 @@ while True:
             throw_deadline = False
         
     if watchingForCatch: #caught
-        if (max(differences) > 1000) and (min(differences) < -1000):
+        if (max(differences) > 800) and (min(differences) < -800):
             differences = [0]
             catchtime_start = running_time()
             throw_deadline = True
