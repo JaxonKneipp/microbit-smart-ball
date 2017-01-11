@@ -15,7 +15,4 @@ while True:
     msg = radio.receive()
     
     if str(msg) == "1":
-        
-        counter += 1
-        display.show(str(counter))
-        
+        print('1')
