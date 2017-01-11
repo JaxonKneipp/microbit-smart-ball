@@ -64,10 +64,11 @@ class Application(tk.Frame):
 		self.welcomeLabel.pack()
 
 		self.teamNameEntry = tk.Entry(self)
+		self.teamNameEntry.bind("<Enter>", self.submit_text)
 		self.teamNameEntry.pack()
 
-		b = tk.Button(self, text="OK", command=self.submit_text)
-		b.pack()
+		self.button = tk.Button(self, text="OK", command=self.submit_text)
+		self.button.pack()
 
 
 	def submit_text(self):
@@ -75,7 +76,10 @@ class Application(tk.Frame):
 		if not teamname:
 			# TODO
 			return
-
+			
+		self.teamNameEntry.set("")
+		self.buttton['state'] = tk.DISABLED
+		
 		mb_port = get_microbit_port()
 		if mb_port is None:
 			raise RuntimeError("Could not find micro:bit comport!")
@@ -104,6 +108,7 @@ class Application(tk.Frame):
 
 				elif typ == "over":
 					print("OVER")
+					self.buttton['state'] = tk.NORMAL
 					break
 
 if __name__ == "__main__":
