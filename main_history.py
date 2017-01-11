@@ -54,7 +54,6 @@ while True:
             radio.send("game over")
             display.show(Image.SKULL)
             music.play(music.DADADADUM)
-            print (running_time(), catchtime_start)
             break
          
         

@@ -16,9 +16,11 @@ while True:
     if str(msg) == "1":
         counter += 1
         print("count {}".format(counter))
+        display.scroll(str(counter), wait= False)
 
     if str(msg) == "game over":
         print("over")
+        display.show(Image.SKULL)
 
     if button_b.was_pressed():
         radio.send("start")
