@@ -8,7 +8,7 @@ import radio
 radio.on()
 radio.config(channel=85)
 
-counter = 0
+counter = 1
 
 while True:
     
@@ -25,6 +25,9 @@ while True:
     if str(msg) == "game over":
         
         print("over")
+    
+    if button_b.was_pressed():
+        radio.send("start")
      
         
     
