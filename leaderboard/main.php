@@ -23,6 +23,18 @@ if ($action == "c") {
 	
 	$gamename = $_GET["gamename"];
 	
+	$sqlDelete = "DELETE FROM games WHERE game_name = '".$gamename."'";
+	
+	if ($conn->query($sqlDelete) === TRUE) {
+	
+		echo "Record deleted successfully";
+		
+	} else {
+	
+		echo "Error: " . $sql . "<br>" . $conn->error;
+		
+	}	
+	
 	$sql = "INSERT INTO games (game_name, count) VALUES ('".$gamename."', 0)";
 
 	if ($conn->query($sql) === TRUE) {
