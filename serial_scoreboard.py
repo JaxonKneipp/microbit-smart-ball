@@ -24,6 +24,7 @@
 # SOFTWARE.
 
 import random
+import webbrowser
 
 import tkinter as tk
 import requests
@@ -89,6 +90,8 @@ class Application(tk.Frame):
 		if r.status_code != 200:
 			self.button['state'] = tk.NORMAL
 			raise RuntimeError("NON-200: %s" % (r.status_code,))
+
+		webbrowser.open_new_tab(LEADERBOARD_URL % ("d", teamname))
 
 		with serial.Serial(port=mb_port, baudrate=MICROBIT_BAUDRATE) as ser:
 			while True:
