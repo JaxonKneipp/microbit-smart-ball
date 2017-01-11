@@ -15,4 +15,18 @@ while True:
     msg = radio.receive()
     
     if str(msg) == "1":
+<<<<<<< HEAD
         print('1')
+=======
+        
+        counter += 1
+        print("count {}".format(counter))
+        
+    if str(msg) == "game over":
+        
+        print("over")
+     
+        
+    
+        
+>>>>>>> origin/master
