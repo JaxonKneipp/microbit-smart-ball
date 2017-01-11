@@ -25,6 +25,7 @@
 
 import random
 
+import tkinter as tk
 import requests
 import serial
 import serial.tools.list_ports
@@ -41,39 +42,71 @@ def get_microbit_port():
 			return name
 	return None
 
-def main(teamname):
-	mb_port = get_microbit_port()
-	if mb_port is None:
-		raise RuntimeError("Could not find micro:bit comport!")
-	print(mb_port)
 
-	r = requests.get(LEADERBOARD_URL % ("c", teamname))
-	if r.status_code != 200:
-		raise RuntimeError("NON-200: %s" % (r.status_code,))
+class Application(tk.Frame):
+	def __init__(self, master=None):
 
-	with serial.Serial(port=mb_port, baudrate=MICROBIT_BAUDRATE) as ser:
-		while True:
-			line = ser.readline().decode("latin1")
-			line = line.strip()
+		super().__init__(master)
+		self.master = master
+		self.pack()
+		self.master.geometry("1000x500")
+		self.create_widgets()
 
-			print("GOT: %s" % line)
+	def create_widgets(self):
 
-			typ, *args = line.split()
+		self.smartSoccerLabel = tk.Label(self, text="Smart ball", font=("Monospace", 25), pady=10)
+		self.smartSoccerLabel.pack()
 
-			if typ == "count":
-				counter = int(args[0])
-				print("TEAM: %d" % (counter,))
+		self.attributionLabel = tk.Label(self, text="by Jaxon Kneipp, Sean Hall, Kim Armstrong and Alice Cao", font=("Monospace", 10))
+		self.attributionLabel.pack()
 
-				r = requests.get(LEADERBOARD_URL % ("i", teamname))
-				if r.status_code != 200:
-					raise RuntimeError("NON-200: %s" % (r.status_code,))
+		self.welcomeLabel = tk.Label(self, text="Welcome, Please enter the name of your team.", font=("Monospace", 12))
+		self.welcomeLabel.pack()
 
-			elif typ == "over":
-				print("OVER")
-				break
+		self.teamNameEntry = tk.Entry(self)
+		self.teamNameEntry.pack()
+
+		b = tk.Button(self, text="OK", command=self.submit_text)
+		b.pack()
+
+
+	def submit_text(self):
+		teamname = self.teamNameEntry.get()
+		if not teamname:
+			# TODO
+			return
+
+		mb_port = get_microbit_port()
+		if mb_port is None:
+			raise RuntimeError("Could not find micro:bit comport!")
+		print(mb_port)
+
+		r = requests.get(LEADERBOARD_URL % ("c", teamname))
+		if r.status_code != 200:
+			raise RuntimeError("NON-200: %s" % (r.status_code,))
+
+		with serial.Serial(port=mb_port, baudrate=MICROBIT_BAUDRATE) as ser:
+			while True:
+				line = ser.readline().decode("latin1")
+				line = line.strip()
+
+				print("GOT: %s" % line)
+
+				typ, *args = line.split()
+
+				if typ == "count":
+					counter = int(args[0])
+					print("TEAM: %d" % (counter,))
+
+					r = requests.get(LEADERBOARD_URL % ("i", teamname))
+					if r.status_code != 200:
+						raise RuntimeError("NON-200: %s" % (r.status_code,))
+
+				elif typ == "over":
+					print("OVER")
+					break
 
 if __name__ == "__main__":
-	while True:
-		i = random.randint(0, 9999999)
-		print("NEW TEAM %d" % (i,))
-		main("team %d" % (i,))
+	root = tk.Tk()
+	app = Application(master=root)
+	app.mainloop()
