@@ -21,3 +21,6 @@ while True:
     if str(msg) == "game over":
         print("over")
         display.show(Image.SKULL)
+        
+    if button_a.was_pressed():
+        radio.send("start")
