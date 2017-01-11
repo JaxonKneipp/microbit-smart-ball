@@ -42,7 +42,6 @@ def get_microbit_port():
 			return name
 	return None
 
-
 class Application(tk.Frame):
 	def __init__(self, master=None):
 
@@ -63,30 +62,32 @@ class Application(tk.Frame):
 		self.welcomeLabel = tk.Label(self, text="Welcome, Please enter the name of your team.", font=("Monospace", 12))
 		self.welcomeLabel.pack()
 
-		self.teamNameEntry = tk.Entry(self)
-		self.teamNameEntry.bind("<Enter>", self.submit_text)
+		self.teamName = tk.StringVar()
+
+		self.teamNameEntry = tk.Entry(self, textvariable=self.teamName)
+		# self.teamNameEntry.bind("<Enter>", self.submit_text)
 		self.teamNameEntry.pack()
 
 		self.button = tk.Button(self, text="OK", command=self.submit_text)
 		self.button.pack()
 
-
-	def submit_text(self):
-		teamname = self.teamNameEntry.get()
+	def submit_text(self, *_):
+		teamname = self.teamName.get()
 		if not teamname:
-			# TODO
 			return
-			
-		self.teamNameEntry.set("")
-		self.buttton['state'] = tk.DISABLED
-		
+
+		self.teamName.set("")
+		self.button['state'] = tk.DISABLED
+
 		mb_port = get_microbit_port()
 		if mb_port is None:
+			self.button['state'] = tk.NORMAL
 			raise RuntimeError("Could not find micro:bit comport!")
 		print(mb_port)
 
 		r = requests.get(LEADERBOARD_URL % ("c", teamname))
 		if r.status_code != 200:
+			self.button['state'] = tk.NORMAL
 			raise RuntimeError("NON-200: %s" % (r.status_code,))
 
 		with serial.Serial(port=mb_port, baudrate=MICROBIT_BAUDRATE) as ser:
@@ -104,11 +105,12 @@ class Application(tk.Frame):
 
 					r = requests.get(LEADERBOARD_URL % ("i", teamname))
 					if r.status_code != 200:
+						self.button['state'] = tk.NORMAL
 						raise RuntimeError("NON-200: %s" % (r.status_code,))
 
 				elif typ == "over":
 					print("OVER")
-					self.buttton['state'] = tk.NORMAL
+					self.button['state'] = tk.NORMAL
 					break
 
 if __name__ == "__main__":
