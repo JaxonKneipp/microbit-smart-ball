@@ -5,49 +5,58 @@
 from microbit import *
 import math
 import radio
+import music
 
 radio.on()
 radio.config(channel = 85)
 
 watchingForCatch = False
 throw_deadline = False
-acc_history = []
-
+acc_history = [1000]
+differences = [0]
+catchtime_start = 0
 
 while True:
     
-    catchtime_start = 0
     display.show(Image.HEART)
     vals = accelerometer.get_values()
     data = math.sqrt(vals[0]**2+vals[1]**2+vals[2]**2)
     acc_history.append(data)
-    diff = vals[-1] - vals[-2]
     
     if len(acc_history) > 15:
         acc_history.pop(0)
     
-    
-    
+    diff = acc_history[-2] - acc_history[-1]
+    differences.append(diff)
+
+    if len(differences) > 15:
+        differences.pop(0)
+        
+    print(differences)
     print(acc_history)
-    average = sum(acc_history)/ len(acc_history)
         
-    if average <= 700 and not watchingForCatch: #thrown
+    if not watchingForCatch: #thrown
+        if (max(differences) > 1000) and (min(differences) < -1000):
+            differences = [0]
+            radio.send("0")
+            catchtime_start = running_time()
+            watchingForCatch = True
+            throw_deadline = False
         
-        radio.send("0")
-        watchingForCatch = True
-        throw_deadline = False
-        
-    if watchingForCatch and average >= 3500: #caught
-        
-        catchtime_start = running_time()
-        throw_deadline = True
-        radio.send("1")
-        watchingForCatch = False
+    if watchingForCatch: #caught
+        if (max(differences) > 1000) and (min(differences) < -1000):
+            differences = [0]
+            catchtime_start = running_time()
+            throw_deadline = True
+            radio.send("1")
+            watchingForCatch = False
      
-    if running_time() - catchtime_start >= 5000 and throw_deadline:
+    if running_time() - catchtime_start >= 8000 and throw_deadline:
         radio.send("game over")
         display.show(Image.SKULL)
+        music.play(music.DADADADUM)
+        print (running_time(), catchtime_start)
         break
      
-     
+    
     sleep(50)
