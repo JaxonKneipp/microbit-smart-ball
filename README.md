@@ -1,4 +1,4 @@
-# SmartBall
+# microbit-smart-ball
 
 NCSS 2017 major embedded stream project
 
